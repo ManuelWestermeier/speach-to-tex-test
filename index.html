@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Voice Keyword Listener</title>
+</head>
+<body>
+  <h1>Say "help me"</h1>
+  <button onclick="startListening()">Start Listening</button>
+
+  <script>
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Speech Recognition not supported in this browser.");
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+
+    function startListening() {
+      recognition.start();
+    }
+
+    recognition.onresult = (event) => {
+      let transcript = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        transcript += event.results[i][0].transcript.trim() + ' ';
+      }
+
+      transcript = transcript.toLowerCase();
+      console.log('Transcript:', transcript);
+
+      if (transcript.includes("help me")) {
+        alert("Keyword detected: 'help me'");
+        // You can trigger any action here
+      }
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Speech Recognition Error", event.error);
+    };
+  </script>
+</body>
+</html>
